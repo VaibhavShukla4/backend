@@ -8,7 +8,7 @@ app.use(cors());
 
 app.get("/list", async (req, res) => {
   const UserData = await UserDetails.find();
-  console.log(UserData);
+  // console.log(UserData);
   res.send(UserData);
 });
 app.post("/adduser-detail", async (req, res) => {

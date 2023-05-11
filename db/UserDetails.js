@@ -28,21 +28,23 @@ const userSchema = new mongoose.Schema({
   },
   govtId: {
     type: String,
-    validate: [
-      {
-        validator: function (value) {
-          return this.idType === "Aadhar" && /^\d{12}$/.test(value);
-        },
-        message: "Govt Id should be a valid 12-digit numeric string for Aadhar",
+    validate: {
+      validator: function (value) {
+        if (this.idType === "Aadhar") {
+          return /^\d{12}$/.test(value);
+        } else if (this.idType === "PAN") {
+          return /^[A-Za-z0-9]{10}$/.test(value);
+        }
+        return false;
       },
-      // {
-      //   validator: function (value) {
-      //     return this.idType === "PAN" && /^[A-Za-z0-9]{10}$/.test(value);
-      //   },
-      //   message:
-      //     "Govt Id should be a valid 10-digit alpha-numeric string for PAN",
-      // },
-    ],
+      message: function (props) {
+        if (this.idType === "Aadhar") {
+          return "Govt Id should be a valid 12-digit numeric string";
+        } else if (this.idType === "PAN") {
+          return "Govt Id should be a valid 10-digit alpha-numeric string";
+        }
+      },
+    },
   },
   guardianName: String,
   guardianSex: { type: String, enum: ["Male", "Female", "Other"] },
